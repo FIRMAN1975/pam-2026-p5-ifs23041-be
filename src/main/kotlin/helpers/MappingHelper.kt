@@ -1,10 +1,10 @@
 package org.delcom.helpers
 
 import kotlinx.coroutines.Dispatchers
-import org.delcom.dao.TodoDAO
+import org.delcom.dao.LostFoundItemDAO
 import org.delcom.dao.RefreshTokenDAO
 import org.delcom.dao.UserDAO
-import org.delcom.entities.Todo
+import org.delcom.entities.LostFoundItem
 import org.delcom.entities.RefreshToken
 import org.delcom.entities.User
 import org.jetbrains.exposed.sql.Transaction
@@ -31,14 +31,18 @@ fun refreshTokenDAOToModel(dao: RefreshTokenDAO) = RefreshToken(
     dao.createdAt,
 )
 
-fun todoDAOToModel(dao: TodoDAO) = Todo(
-    id = dao.id.value.toString(),
-    userId = dao.userId.toString(),
-    title = dao.title,
+fun lostFoundItemDAOToModel(dao: LostFoundItemDAO) = LostFoundItem(
+    id          = dao.id.value.toString(),
+    userId      = dao.userId.toString(),
+    type        = dao.type,
+    title       = dao.title,
     description = dao.description,
-    isDone =  dao.isDone,
-    cover = dao.cover,
-    createdAt = dao.createdAt,
-    updatedAt = dao.updatedAt
+    category    = dao.category,
+    location    = dao.location,
+    imageUrl    = dao.imageUrl,
+    status      = dao.status,
+    date        = dao.date.toString(),
+    createdAt   = dao.createdAt,
+    updatedAt   = dao.updatedAt
 )
 

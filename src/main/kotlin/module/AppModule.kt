@@ -2,7 +2,7 @@ package org.delcom.module
 
 import org.delcom.repositories.*
 import org.delcom.services.AuthService
-import org.delcom.services.TodoService
+import org.delcom.services.LostFoundItemService
 import org.delcom.services.UserService
 import org.koin.dsl.module
 
@@ -28,12 +28,12 @@ fun appModule(jwtSecret: String) = module {
     }
 
     // Plant Repository
-    single<ITodoRepository> {
-        TodoRepository()
+    single<ILostFoundItemRepository> {
+        LostFoundItemRepository()
     }
 
     // Plant Service
     single {
-        TodoService(get(),get())
+        LostFoundItemService(get(),get())
     }
 }

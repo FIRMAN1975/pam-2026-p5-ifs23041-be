@@ -5,7 +5,7 @@ import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.delcom.tables.UserTable
-import org.delcom.tables.TodoTable
+import org.delcom.tables.LostFoundItemTable
 import org.delcom.tables.RefreshTokenTable
 
 fun Application.configureDatabases() {
@@ -25,7 +25,7 @@ fun Application.configureDatabases() {
     transaction {
         SchemaUtils.createMissingTablesAndColumns(
             UserTable,
-            TodoTable,
+            LostFoundItemTable,
             RefreshTokenTable
         )
     }

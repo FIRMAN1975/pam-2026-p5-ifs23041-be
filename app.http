@@ -1,5 +1,5 @@
 ## Global Variabel
-#@BaseUrl = https://pam-2026-p5-ifs18005-be.delcom.org:8080
+#@BaseUrl = https://your-production-url.com:8080
 @BaseUrl = http://127.0.0.1:8000
 
 ### ---------------------------------------
@@ -32,7 +32,7 @@ Content-Type: application/json
     client.global.set("refreshToken", response.body.data.refreshToken);
 %}
 
-### Keluar dari layanan (skip run)
+### Keluar dari layanan
 # @name PostLogout
 POST {{BaseUrl}}/auth/logout
 Content-Type: application/json
@@ -41,7 +41,7 @@ Content-Type: application/json
   "authToken": "{{authToken}}"
 }
 
-### Masuk ke layanan
+### Refresh token
 # @name PostRefreshToken
 POST {{BaseUrl}}/auth/refresh-token
 Content-Type: application/json
@@ -105,7 +105,7 @@ Content-Type: image/png
 < ./uploads/examples/me.png
 --WebAppBoundary--
 
-### Mengambil data tumbuhan berdasarkan id-nya
+### Mengambil photo profile
 @userId = 00ed9d33-61b0-48b7-a32a-6510af028731
 
 # @name GetMyPhoto
@@ -114,51 +114,59 @@ Authorization: Bearer {{authToken}}
 Content-Type: application/json
 
 ### ---------------------------------------
-## Todos
+## Lost & Found Items
 ### ---------------------------------------
 
-### Mengambil semua data todo user saat ini
-# @name GetTodos
-GET {{BaseUrl}}/todos?search=
+### Mengambil semua item (filter opsional)
+# @name GetItems
+GET {{BaseUrl}}/items?search=&type=&category=&status=
 Authorization: Bearer {{authToken}}
 Content-Type: application/json
 
-### Menambahkan todo
-# @name PostTodos
-POST {{BaseUrl}}/todos
+### Menambahkan item baru
+# @name PostItem
+POST {{BaseUrl}}/items
 Authorization: Bearer {{authToken}}
 Content-Type: application/json
 
 {
-  "title": "Judul Todo",
-  "description": "Deskripsi Todo"
+  "type": "LOST",
+  "title": "Dompet Hitam",
+  "description": "Dompet hitam berisi KTP dan kartu ATM",
+  "category": "Wallet",
+  "location": "Kantin Lantai 2",
+  "date": "2024-01-15T10:00:00Z"
 }
 
 > {%
-    client.global.set("todoId", response.body.data.todoId);
+    client.global.set("itemId", response.body.data.itemId);
 %}
 
-### Mengambil todo dengan id
-# @name GetTodoById
-GET {{BaseUrl}}/todos/{{todoId}}
+### Mengambil item berdasarkan id
+# @name GetItemById
+GET {{BaseUrl}}/items/{{itemId}}
 Authorization: Bearer {{authToken}}
 Content-Type: application/json
 
-### Mengubah todo
-# @name PutTodo
-PUT {{BaseUrl}}/todos/{{todoId}}
+### Mengubah data item
+# @name PutItem
+PUT {{BaseUrl}}/items/{{itemId}}
 Authorization: Bearer {{authToken}}
 Content-Type: application/json
 
 {
-  "title": "Judul Todo",
-  "description": "Deskripsi Todo",
-  "isDone": true
+  "type": "LOST",
+  "title": "Dompet Hitam Update",
+  "description": "Dompet hitam berisi KTP dan kartu ATM",
+  "category": "Wallet",
+  "location": "Kantin Lantai 2",
+  "status": "ACTIVE",
+  "date": "2024-01-15T10:00:00Z"
 }
 
-### Mengubah cover todo
-# @name PutTodoCover
-PUT {{BaseUrl}}/todos/{{todoId}}/cover
+### Mengubah image item
+# @name PutItemImage
+PUT {{BaseUrl}}/items/{{itemId}}/image
 Authorization: Bearer {{authToken}}
 Content-Type: multipart/form-data; boundary=WebAppBoundary
 
@@ -169,14 +177,14 @@ Content-Type: image/png
 < ./uploads/examples/me.png
 --WebAppBoundary--
 
-### Mengambil cover todo
-# @name GetTodoCover
-GET {{BaseUrl}}/images/todos/{{todoId}}
+### Mengambil image item
+# @name GetItemImage
+GET {{BaseUrl}}/images/items/{{itemId}}
 Authorization: Bearer {{authToken}}
 Content-Type: application/json
 
-### Menghapus todo
-# @name DeleteTodo
-DELETE {{BaseUrl}}/todos/{{todoId}}
+### Menghapus item
+# @name DeleteItem
+DELETE {{BaseUrl}}/items/{{itemId}}
 Authorization: Bearer {{authToken}}
 Content-Type: application/json

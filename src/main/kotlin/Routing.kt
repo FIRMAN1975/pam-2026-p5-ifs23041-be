@@ -10,18 +10,17 @@ import org.delcom.data.AppException
 import org.delcom.data.ErrorResponse
 import org.delcom.helpers.JWTConstants
 import org.delcom.helpers.parseMessageToMap
-import org.delcom.services.TodoService
+import org.delcom.services.LostFoundItemService
 import org.delcom.services.AuthService
 import org.delcom.services.UserService
 import org.koin.ktor.ext.inject
 
 fun Application.configureRouting() {
-    val todoService: TodoService by inject()
+    val lostFoundItemService: LostFoundItemService by inject()
     val authService: AuthService by inject()
     val userService: UserService by inject()
 
     install(StatusPages) {
-        // Tangkap AppException
         exception<AppException> { call, cause ->
             val dataMap: Map<String, List<String>> = parseMessageToMap(cause.message)
 
@@ -35,7 +34,6 @@ fun Application.configureRouting() {
             )
         }
 
-        // Tangkap semua Throwable lainnya
         exception<Throwable> { call, cause ->
             call.respond(
                 status = HttpStatusCode.fromValue(500),
@@ -50,7 +48,7 @@ fun Application.configureRouting() {
 
     routing {
         get("/") {
-            call.respondText("API telah berjalan. Dibuat oleh Abdullah Ubaid.")
+            call.respondText("Lost & Found API telah berjalan.")
         }
 
         // Route Auth
@@ -64,14 +62,13 @@ fun Application.configureRouting() {
             post("/refresh-token") {
                 authService.postRefreshToken(call)
             }
-
             post("/logout") {
                 authService.postLogout(call)
             }
         }
 
         authenticate(JWTConstants.NAME) {
-            // Route User
+            // Route Users
             route("/users") {
                 get("/me") {
                     userService.getMe(call)
@@ -87,38 +84,37 @@ fun Application.configureRouting() {
                 }
             }
 
-            // Route Todos
-            route("/todos") {
+            // Route Lost & Found Items
+            route("/items") {
                 get {
-                    todoService.getAll(call)
+                    lostFoundItemService.getAll(call)
                 }
                 post {
-                    todoService.post(call)
+                    lostFoundItemService.post(call)
                 }
                 get("/{id}") {
-                    todoService.getById(call)
+                    lostFoundItemService.getById(call)
                 }
                 put("/{id}") {
-                    todoService.put(call)
+                    lostFoundItemService.put(call)
                 }
-                put("/{id}/cover") {
-                    todoService.putCover(call)
+                put("/{id}/image") {
+                    lostFoundItemService.putImage(call)
                 }
                 delete("/{id}") {
-                    todoService.delete(call)
+                    lostFoundItemService.delete(call)
                 }
             }
         }
 
+        // Route Images
         route("/images") {
-            get("users/{id}") {
+            get("/users/{id}") {
                 userService.getPhoto(call)
             }
-
-            get("todos/{id}") {
-                todoService.getCover(call)
+            get("/items/{id}") {
+                lostFoundItemService.getImage(call)
             }
         }
-
     }
 }
